@@ -1,17 +1,22 @@
-from app.models.base_model import BaseModel
+from .base_model import BaseModel
 
 
 class Place(BaseModel):
-    def __init__(self,
-                 user_id,
-                 name,
-                 city=None,
-                 price_per_night=0,
-                 **kwargs):
-        super().__init__(**kwargs)
-        self.user_id = user_id
-        self.name = name
-        self.city = city
-        self.price_per_night = price_per_night
-        self.reviews = []     # relation vers Review
-        self.amenities = []   # relation vers Amenity
+    def __init__(self, title, description, price, latitude, longitude, owner):
+        super().__init__()
+        self.title = title
+        self.description = description
+        self.price = price
+        self.latitude = latitude
+        self.longitude = longitude
+        self.owner = owner
+        self.reviews = []  # List to store related reviews
+        self.amenities = []  # List to store related amenities
+
+    def add_review(self, review):
+        """Add a review to the place."""
+        self.reviews.append(review)
+
+    def add_amenity(self, amenity):
+        """Add an amenity to the place."""
+        self.amenities.append(amenity)
