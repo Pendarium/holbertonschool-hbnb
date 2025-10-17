@@ -22,3 +22,16 @@ class User(BaseModel):
 
     def add_review(self, review):
         self.reviews.append(review)
+
+    def dict(self):
+        """
+        Retourne un dictionnaire représentant l'utilisateur,
+        sans inclure le mot de passe.
+        """
+        return {
+            "id": self.id,
+            "email": self.email,
+            "first_name": self.first_name,
+            "last_name": self.last_name,
+            "is_admin": self.is_admin
+        }
