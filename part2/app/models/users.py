@@ -2,20 +2,15 @@ from .base_model import BaseModel
 
 
 class User(BaseModel):
-    def __init__(self,
-                 first_name="",
-                 last_name="",
-                 email="",
-                 password="",
-                 is_admin=False):
+    def __init__(self, **kwargs):
+        self.first_name = kwargs.get("first_name", "")
+        self.last_name = kwargs.get("last_name", "")
+        self.email = kwargs.get("email", "")
+        self.password = kwargs.get("password", "")
+        self.is_admin = kwargs.get("is_admin", False)
+        self.places = kwargs.get("places", [])
+        self.reviews = kwargs.get("reviews", [])
         super().__init__()
-        self.first_name = first_name
-        self.last_name = last_name
-        self.email = email
-        self.password = password
-        self.is_admin = is_admin
-        self.places = []
-        self.reviews = []
 
     def add_place(self, place):
         self.places.append(place)
@@ -23,15 +18,12 @@ class User(BaseModel):
     def add_review(self, review):
         self.reviews.append(review)
 
-    def dict(self):
-        """
-        Retourne un dictionnaire représentant l'utilisateur,
-        sans inclure le mot de passe.
-        """
-        return {
+    def to_dict(self):
+        data = {
             "id": self.id,
-            "email": self.email,
             "first_name": self.first_name,
             "last_name": self.last_name,
+            "email": self.email,
             "is_admin": self.is_admin
         }
+        return data

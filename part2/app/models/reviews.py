@@ -2,12 +2,17 @@ from .base_model import BaseModel
 
 
 class Review(BaseModel):
-    def __init__(self, text="", rating=0, place=None, user=None):
+    def __init__(self, **kwargs):
+        self.text = kwargs.get("text", "")
+        self.user_id = kwargs.get("user_id", "")
+        self.place_id = kwargs.get("place_id", "")
         super().__init__()
-        self.text = text
-        self.rating = rating
-        self.place = place
-        self.user = user
 
-    def is_valid(self):
-        return isinstance(self.rating, (int, float)) and 1 <= self.rating <= 5
+    def to_dict(self):
+        data = {
+            "id": self.id,
+            "text": self.text,
+            "user_id": self.user_id,
+            "place_id": self.place_id
+        }
+        return data

@@ -18,9 +18,11 @@ class AmenityList(Resource):
     def post(self):
         """Register a new amenity"""
         data = request.get_json()
+        if not data or not isinstance(data, dict):
+            return {"error": "Invalid JSON"}, 400
         try:
             amenity = facade.create_amenity(data)
-            return {"id": amenity.id, "name": amenity.name}, 201
+            return amenity.to_dict(), 201
         except ValueError as e:
             return {"error": str(e)}, 400
 
@@ -28,7 +30,7 @@ class AmenityList(Resource):
     def get(self):
         """Retrieve a list of all amenities"""
         amenities = facade.get_all_amenities()
-        return [{"id": a.id, "name": a.name} for a in amenities], 200
+        return [a.to_dict() for a in amenities], 200
 
 
 @api.route('/<amenity_id>')
@@ -40,7 +42,7 @@ class AmenityResource(Resource):
         amenity = facade.get_amenity(amenity_id)
         if not amenity:
             return {"error": "Amenity not found"}, 404
-        return {"id": amenity.id, "name": amenity.name}, 200
+        return amenity.to_dict(), 200
 
     @api.expect(amenity_model)
     @api.response(200, 'Amenity updated successfully')
@@ -49,10 +51,12 @@ class AmenityResource(Resource):
     def put(self, amenity_id):
         """Update an amenity's information"""
         data = request.get_json()
+        if not data or not isinstance(data, dict):
+            return {"error": "Invalid JSON"}, 400
         try:
             amenity = facade.update_amenity(amenity_id, data)
             if not amenity:
                 return {"error": "Amenity not found"}, 404
-            return {"id": amenity.id, "name": amenity.name}, 200
+            return amenity.to_dict(), 200
         except ValueError as e:
             return {"error": str(e)}, 400
