@@ -20,8 +20,15 @@ class HBnBFacade:
 
     # --- Users ---
     def create_user(self, user_data):
+        first_name = user_data.get("first_name", "").strip()
+        last_name = user_data.get("last_name", "").strip()
         email = user_data.get("email", "").strip()
-        if not email or not self._is_valid_email(email):
+
+        if not first_name or not last_name or not email:
+            raise ValueError(
+                "First name, last name, and email cannot be empty.")
+
+        if not self._is_valid_email(email):
             raise ValueError("Invalid email format.")
 
         if self.get_user_by_email(email):
@@ -32,6 +39,10 @@ class HBnBFacade:
         return user
 
     def update_user(self, user_id, user_data):
+        if "first_name" in user_data and not user_data["first_name"].strip():
+            raise ValueError("First name cannot be empty.")
+        if "last_name" in user_data and not user_data["last_name"].strip():
+            raise ValueError("Last name cannot be empty.")
         if "email" in user_data:
             email = user_data["email"].strip()
             if not self._is_valid_email(email):
@@ -89,6 +100,10 @@ class HBnBFacade:
             if field not in place_data:
                 raise ValueError(f"{field} is required.")
 
+        title = place_data["title"].strip()
+        if not title:
+            raise ValueError("Title cannot be empty.")
+
         price = float(place_data["price"])
         latitude = float(place_data["latitude"])
         longitude = float(place_data["longitude"])
@@ -111,7 +126,7 @@ class HBnBFacade:
             amenities.append(amenity)
 
         place = Place(
-            title=place_data["title"],
+            title=title,
             description=place_data.get("description", ""),
             price=price,
             latitude=latitude,
@@ -136,7 +151,10 @@ class HBnBFacade:
         updated_fields = {}
 
         if "title" in place_data:
-            updated_fields["title"] = place_data["title"]
+            title = place_data["title"].strip()
+            if not title:
+                raise ValueError("Title cannot be empty.")
+            updated_fields["title"] = title
         if "description" in place_data:
             updated_fields["description"] = place_data["description"]
 
@@ -194,6 +212,10 @@ class HBnBFacade:
             if field not in review_data:
                 raise ValueError(f"{field} is required.")
 
+        text = review_data["text"].strip()
+        if not text:
+            raise ValueError("Review text cannot be empty.")
+
         user = self.get_user(review_data["user_id"])
         if not user:
             raise ValueError("User not found.")
@@ -218,5 +240,12 @@ class HBnBFacade:
         review = self.get_review(review_id)
         if not review:
             return None
+
+        if "text" in review_data:
+            text = review_data["text"].strip()
+            if not text:
+                raise ValueError("Review text cannot be empty.")
+            review_data["text"] = text
+
         self.review_repo.update(review_id, review_data)
         return self.get_review(review_id)
