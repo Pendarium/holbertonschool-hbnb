@@ -3,6 +3,10 @@ from app.models.user import User
 from app.models.amenity import Amenity
 from app.models.place import Place
 from app.models.review import Review
+from flask_bcrypt import Bcrypt
+
+bcrypt = Bcrypt()
+
 
 class HBnBFacade:
     def __init__(self):
@@ -13,10 +17,17 @@ class HBnBFacade:
 
     # USER
     def create_user(self, user_data):
-        user = User(**user_data)
+        user = User(
+            first_name=user_data["first_name"],
+            last_name=user_data["last_name"],
+            email=user_data["email"],
+            password=user_data["password"]
+        )
+        user.hash_password(user_data["password"])
         self.user_repo.add(user)
+
         return user
-    
+
     def get_users(self):
         return self.user_repo.get_all()
 
@@ -25,10 +36,10 @@ class HBnBFacade:
 
     def get_user_by_email(self, email):
         return self.user_repo.get_by_attribute('email', email)
-    
+
     def update_user(self, user_id, user_data):
         self.user_repo.update(user_id, user_data)
-    
+
     # AMENITY
     def create_amenity(self, amenity_data):
         amenity = Amenity(**amenity_data)
@@ -81,7 +92,7 @@ class HBnBFacade:
             raise KeyError('Invalid input data')
         del review_data['user_id']
         review_data['user'] = user
-        
+
         place = self.place_repo.get(review_data['place_id'])
         if not place:
             raise KeyError('Invalid input data')
@@ -93,7 +104,7 @@ class HBnBFacade:
         user.add_review(review)
         place.add_review(review)
         return review
-        
+
     def get_review(self, review_id):
         return self.review_repo.get(review_id)
 
@@ -111,7 +122,7 @@ class HBnBFacade:
 
     def delete_review(self, review_id):
         review = self.review_repo.get(review_id)
-        
+
         user = self.user_repo.get(review.user.id)
         place = self.place_repo.get(review.place.id)
 
