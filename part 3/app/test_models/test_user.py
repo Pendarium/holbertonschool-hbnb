@@ -1,15 +1,16 @@
 import unittest
 from ..models.user import User
 
+
 class TestUser(unittest.TestCase):
     def test_user_creation(self):
-        user = User(first_name="John", last_name="Doe", email="john.doe@example.com")
+        user = User(first_name="John", last_name="Doe", email="john.does@example.com")
         assert user.first_name == "John"
         assert user.last_name == "Doe"
-        assert user.email == "john.doe@example.com"
+        assert user.email == "john.does@example.com"
         assert user.is_admin is False  # Default value
         user_id = user.id
-        assert user.to_dict() == {'id': user_id, 'first_name': "John", 'last_name': "Doe", 'email': 'john.doe@example.com'}
+        assert user.to_dict() == {'id': user_id, 'first_name': "John", 'last_name': "Doe", 'email': 'john.does@example.com'}
 
     # Faire les tests pour les types + is admin
 

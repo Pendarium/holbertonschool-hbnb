@@ -1,6 +1,7 @@
 from ..models.review import Review
 import unittest
 
+
 class TestUser(unittest.TestCase):
     def test_review_creation(self):
         review = Review(name="Wi-Fi")
@@ -26,6 +27,7 @@ class TestUser(unittest.TestCase):
         with self.assertRaises(ValueError) as context:
             review.name = "abdcdefghijklmnopqrstuvwxyzabdcdefghijklmnopqrstuvwxyz"
         self.assertEqual(str(context.exception), "Name must be 50 characters max.")'''
+
 
 if __name__ == "__main__":
     unittest.main()

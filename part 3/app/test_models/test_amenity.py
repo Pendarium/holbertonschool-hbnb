@@ -1,6 +1,7 @@
 from app.models.amenity import Amenity
 import unittest
 
+
 class TestUser(unittest.TestCase):
     def test_amenity_creation(self):
         amenity = Amenity(name="Wi-Fi")
@@ -26,6 +27,7 @@ class TestUser(unittest.TestCase):
         with self.assertRaises(ValueError) as context:
             amenity.name = "abdcdefghijklmnopqrstuvwxyzabdcdefghijklmnopqrstuvwxyz"
         self.assertEqual(str(context.exception), "Name must be 50 characters max.")
+
 
 if __name__ == "__main__":
     unittest.main()
