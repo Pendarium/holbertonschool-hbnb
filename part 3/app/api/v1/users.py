@@ -5,7 +5,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 users_ns = Namespace('users', description='User operations')
 
 
-# MODELS
+# models
 
 user_model = users_ns.model('User', {
     'first_name': fields.String(
@@ -25,16 +25,16 @@ user_model = users_ns.model('User', {
         description='Is the user admin?')
 })
 
-# ROUTE PROTÉGÉE TEST
 
+# test route proteger
 
 @users_ns.route('/protected')
 class ProtectedResource(Resource):
     @jwt_required()
     def get(self):
         """Example of a protected route"""
-        user_id = get_jwt_identity()   # récupère l'ID de l'utilisateur
-        claims = get_jwt()             # récupère les claims du JWT (is_admin)
+        user_id = get_jwt_identity()
+        claims = get_jwt()
 
         role = "admin" if claims.get('is_admin', False) else "user"
 
@@ -44,7 +44,7 @@ class ProtectedResource(Resource):
         }, 200
 
 
-# CRÉATION ET LISTE USERS
+# creation user list
 
 @users_ns.route('/')
 class UserList(Resource):
@@ -77,7 +77,7 @@ class UserList(Resource):
         return [user.to_dict() for user in users], 200
 
 
-# USER DETAIL / UPDATE
+# updt user
 
 @users_ns.route('/<user_id>')
 class UserResource(Resource):
@@ -104,17 +104,22 @@ class UserResource(Resource):
     @users_ns.response(400, 'Invalid input data')
     @jwt_required()
     def put(self, user_id):
-        """Update user info (self or admin only)"""
+        """Update user info (self or admin only, cannot change email/password)"""
         current_user = get_jwt_identity()
         claims = get_jwt()
 
+        # Un utilisateur peut seulement modifier son propre profil (ou admin)
         if current_user != user_id and not claims.get("is_admin", False):
-            return {'error': 'Access denied'}, 403
+            return {'error': 'Unauthorized action'}, 403
 
         user_data = users_ns.payload
         user = facade.get_user(user_id)
         if not user:
             return {'error': 'User not found'}, 404
+
+        # modification du mot de passe
+        if 'email' in user_data or 'password' in user_data:
+            return {'error': 'You cannot modify email or password'}, 400
 
         try:
             updated_user = facade.update_user(user_id, user_data)
@@ -123,7 +128,7 @@ class UserResource(Resource):
             return {'error': str(e)}, 400
 
 
-# PROMOTE USER TO ADMIN
+# promotion admin
 
 @users_ns.route('/make-admin/<user_id>')
 class MakeAdmin(Resource):
@@ -139,9 +144,7 @@ class MakeAdmin(Resource):
             return {'error': 'User not found'}, 404
 
         try:
-            user.is_admin = True
             facade.update_user(user_id, {"is_admin": True})
-            return {'message': f'User {
-                user_id} promoted to admin successfully'}, 200
+            return {'message': f'User {user_id} promoted to admin successfully'}, 200
         except Exception as e:
             return {'error': str(e)}, 400
