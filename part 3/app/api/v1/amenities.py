@@ -9,6 +9,7 @@ amenity_model = api.model('Amenity', {
     'name': fields.String(required=True, description='Name of the amenity')
 })
 
+
 @api.route('/')
 class AmenityList(Resource):
     @api.expect(amenity_model)
@@ -17,8 +18,9 @@ class AmenityList(Resource):
     def post(self):
         """Register a new amenity"""
         amenity_data = api.payload
-        
-        existing_amenity = facade.amenity_repo.get_by_attribute('name', amenity_data.get('name'))
+
+        existing_amenity = facade.amenity_repo.get_by_attribute(
+            'name', amenity_data.get('name'))
         if existing_amenity:
             return {'error': 'Invalid input data'}, 400
         try:

@@ -51,14 +51,30 @@ class UserList(Resource):
     @users_ns.expect(user_model, validate=True)
     @users_ns.response(201, 'User successfully created')
     @users_ns.response(400, 'Email already registered')
+    @jwt_required(optional=True)
     def post(self):
-        """Register a new user (anyone can create admin for testing)"""
+        """Register a new user (only admin can create another admin)"""
         user_data = users_ns.payload
+        current_user_id = get_jwt_identity()
 
+        # Vérifie si un utilisateur avec cet email existe déjà
         existing_user = facade.get_user_by_email(user_data['email'])
         if existing_user:
             return {'error': 'Email already registered'}, 400
 
+        # Si on essaie de créer un admin
+        if user_data.get("is_admin", False):
+            # Si aucun utilisateur connecté → interdit
+            if not current_user_id:
+                return {'error':
+                        'Authentication required to create an admin'}, 403
+
+            # Vérifie si l’utilisateur actuel est admin
+            current_user = facade.get_user(current_user_id)
+            if not current_user or not current_user.is_admin:
+                return {'error': 'Only admins can create another admin'}, 403
+
+        # Création du nouvel utilisateur
         try:
             new_user = facade.create_user(user_data)
             return new_user.to_dict(), 201
@@ -104,7 +120,8 @@ class UserResource(Resource):
     @users_ns.response(400, 'Invalid input data')
     @jwt_required()
     def put(self, user_id):
-        """Update user info (self or admin only, cannot change email/password)"""
+        """Update user info
+        (self or admin only, cannot change email/password)"""
         current_user = get_jwt_identity()
         claims = get_jwt()
 
@@ -145,6 +162,7 @@ class MakeAdmin(Resource):
 
         try:
             facade.update_user(user_id, {"is_admin": True})
-            return {'message': f'User {user_id} promoted to admin successfully'}, 200
+            return {'message':
+                    f'User {user_id} promoted to admin successfully'}, 200
         except Exception as e:
             return {'error': str(e)}, 400
