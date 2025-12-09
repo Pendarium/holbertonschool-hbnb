@@ -1,5 +1,6 @@
 from app import create_app, db
-from app.models import User  # adapte le nom de ton modèle utilisateur
+from app.models import User, Place, Review, Amenity
+# adapte le nom de ton modèle utilisateur
 
 app = create_app()
 

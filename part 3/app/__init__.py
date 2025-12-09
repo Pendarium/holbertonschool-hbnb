@@ -2,10 +2,15 @@ from flask import Flask
 from flask_restx import Api
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 from config import DevelopmentConfig
 
 bcrypt = Bcrypt()
 jwt = JWTManager()
+
+db = SQLAlchemy()
+migrate = Migrate()
 
 
 def create_app(config_class=DevelopmentConfig):
@@ -14,13 +19,16 @@ def create_app(config_class=DevelopmentConfig):
 
     bcrypt.init_app(app)
     jwt.init_app(app)
+    db.init_app(app)
+    migrate.init_app(app, db)
 
     api = Api(
         app, version='1.0',
         title='HBnB API',
-        description='HBnB Application API')
+        description='HBnB Application API'
+    )
 
-    # Import des namespaces
+    # IMPORTS APRÈS l'initialisation du db !!
     from app.api.v1.auth import auth_ns
     from app.api.v1.users import users_ns
     from app.api.v1.amenities import api as amenities_ns
