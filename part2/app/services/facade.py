@@ -35,6 +35,8 @@ class HBnBFacade:
             raise ValueError("Email already registered.")
 
         user = User(**user_data)
+        if not hasattr(user, "reviews"):
+            user.reviews = []
         self.user_repo.add(user)
         return user
 
@@ -63,9 +65,6 @@ class HBnBFacade:
     def get_user_by_email(self, email):
         return self.user_repo.get_by_attribute("email", email)
 
-    def get_all(self):
-        return self.user_repo.get_all()
-
     # --- Amenities ---
     def create_amenity(self, amenity_data):
         name = amenity_data.get("name", "").strip()
@@ -84,18 +83,22 @@ class HBnBFacade:
     def update_amenity(self, amenity_id, amenity_data):
         amenity = self.get_amenity(amenity_id)
         if not amenity:
-            return None
-        name = amenity_data.get("name", "").strip()
-        if not name:
-            raise ValueError("Amenity name cannot be empty.")
-        amenity.name = name
-        self.amenity_repo.update(amenity.id, {"name": amenity.name})
+            return None  # Amenity non trouvé
+
+        name = amenity_data.get("name")
+        if name is not None:
+            name = name.strip()
+            if not name:
+                raise ValueError("Amenity name cannot be empty.")
+            amenity.name = name  # Met à jour l'attribut
+
+        self.amenity_repo.update(amenity_id, {"name": amenity.name})
         return amenity
 
     # --- Places ---
     def create_place(self, place_data):
-        required_fields = ["title", "price", "latitude",
-                           "longitude", "owner_id", "amenities"]
+        required_fields = [
+            "title", "price", "latitude", "longitude", "owner_id", "amenities"]
         for field in required_fields:
             if field not in place_data:
                 raise ValueError(f"{field} is required.")
@@ -134,19 +137,18 @@ class HBnBFacade:
             owner=owner,
             amenities=amenities
         )
+        if not hasattr(place, "reviews"):
+            place.reviews = []
         self.place_repo.add(place)
         return place
 
     def get_place(self, place_id):
         return self.place_repo.get(place_id)
 
-    def get_all_places(self):
-        return self.place_repo.get_all()
-
     def update_place(self, place_id, place_data):
         place = self.get_place(place_id)
         if not place:
-            return None
+            return None  # Place non trouvée
 
         updated_fields = {}
 
@@ -155,6 +157,7 @@ class HBnBFacade:
             if not title:
                 raise ValueError("Title cannot be empty.")
             updated_fields["title"] = title
+
         if "description" in place_data:
             updated_fields["description"] = place_data["description"]
 
@@ -205,24 +208,43 @@ class HBnBFacade:
         self.place_repo.update(place_id, updated_fields)
         return self.get_place(place_id)
 
+    def get_reviews_for_place(self, place_id):
+        place = self.get_place(place_id)
+        if not place:
+            return None  # Place non trouvée
+
+        # S'assure que l'attribut reviews existe
+        if not hasattr(place, "reviews"):
+            place.reviews = []
+
+        return place.reviews
+
     # --- Reviews ---
     def create_review(self, review_data):
-        required_fields = ["text", "user_id", "place_id"]
+        required_fields = ["comment", "user_id", "place_id", "rating"]
         for field in required_fields:
             if field not in review_data:
                 raise ValueError(f"{field} is required.")
 
-        text = review_data["text"].strip()
-        if not text:
-            raise ValueError("Review text cannot be empty.")
+        comment = review_data["comment"].strip()
+        if not comment:
+            raise ValueError("Review comment cannot be empty.")
+
+        rating = review_data["rating"]
+        if not isinstance(rating, int) or not (1 <= rating <= 5):
+            raise ValueError("Rating must be an integer between 1 and 5.")
 
         user = self.get_user(review_data["user_id"])
         if not user:
             raise ValueError("User not found.")
+        if not hasattr(user, "reviews"):
+            user.reviews = []
 
         place = self.get_place(review_data["place_id"])
         if not place:
             raise ValueError("Place not found.")
+        if not hasattr(place, "reviews"):
+            place.reviews = []
 
         review = Review(**review_data)
         self.review_repo.add(review)
@@ -230,22 +252,61 @@ class HBnBFacade:
         user.add_review(review)
         return review
 
-    def get_review(self, review_id):
-        return self.review_repo.get(review_id)
-
-    def get_all_reviews(self):
-        return self.review_repo.get_all()
-
     def update_review(self, review_id, review_data):
-        review = self.get_review(review_id)
+        review = self.review_repo.get(review_id)
         if not review:
             return None
 
-        if "text" in review_data:
-            text = review_data["text"].strip()
-            if not text:
-                raise ValueError("Review text cannot be empty.")
-            review_data["text"] = text
+        if "comment" in review_data:
+            comment = review_data["comment"].strip()
+            if not comment:
+                raise ValueError("Review comment cannot be empty.")
+            review_data["comment"] = comment
+
+        if "rating" in review_data:
+            rating = review_data["rating"]
+            if not isinstance(rating, int) or not (1 <= rating <= 5):
+                raise ValueError("Rating must be an integer between 1 and 5.")
 
         self.review_repo.update(review_id, review_data)
-        return self.get_review(review_id)
+        return self.review_repo.get(review_id)
+
+    def get_review(self, review_id):
+        """Retourne un review par son ID"""
+        return self.review_repo.get(review_id)
+
+    def delete_review(self, review_id):
+        review = self.review_repo.get(review_id)
+        if not review:
+            return None
+
+        try:
+            place = self.get_place(review.place_id)
+        except Exception:
+            place = None
+        if place and hasattr(place, "reviews"):
+            place.reviews = [r for r in place.reviews if getattr(
+                r, "id", None) != review_id]
+
+        try:
+            user = self.get_user(review.user_id)
+        except Exception:
+            user = None
+        if user and hasattr(user, "reviews"):
+            user.reviews = [r for r in user.reviews if getattr(
+                r, "id", None) != review_id]
+
+        if hasattr(self.review_repo, "delete"):
+            self.review_repo.delete(review_id)
+        else:
+            if hasattr(
+                self.review_repo, "objects") and isinstance(
+                    self.review_repo.objects, dict):
+                self.review_repo.objects.pop(review_id, None)
+            else:
+                try:
+                    self.review_repo.update(review_id, {})  # noop
+                except Exception:
+                    pass
+
+        return review

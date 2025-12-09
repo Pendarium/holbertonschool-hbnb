@@ -4,13 +4,20 @@ from app.services import facade
 
 api = Namespace('reviews', description='Review operations')
 
-# Input model for creating/updating reviews
+
 review_model = api.model('Review', {
-    'text': fields.String(required=True, description='Text of the review'),
-    'user_id': fields.String(required=True,
-                             description='ID of the user writing the review'),
-    'place_id': fields.String(required=True,
-                              description='ID of the place being reviewed')
+    'comment': fields.String(
+        required=True, description='Comment of the review'),
+    'user_id': fields.String(
+        required=True, description='ID of the user writing the review'),
+    'place_id': fields.String(
+        required=True, description='ID of the place being reviewed'),
+    'rating': fields.Integer(
+        required=True,
+        description='Rating of the review (1 to 5)',
+        min=1,
+        max=5
+    )
 })
 
 
@@ -69,3 +76,10 @@ class ReviewResource(Resource):
             return {"error": str(e)}, 400
         except Exception:
             return {"error": "Internal server error"}, 500
+
+    def delete(self, review_id):
+        """Supprime une review par son ID"""
+        deleted = facade.delete_review(review_id)
+        if not deleted:
+            return {"error": "Review not found"}, 404
+        return {"message": "Review deleted", "id": review_id}, 200
