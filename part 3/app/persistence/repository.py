@@ -3,6 +3,7 @@ from app.extensions import db
 
 
 class Repository(ABC):
+    # Repository Abstract Class
     @abstractmethod
     def add(self, obj):
         pass
@@ -29,6 +30,8 @@ class Repository(ABC):
 
 
 class SQLAlchemyRepository(Repository):
+    # SQLAlchemyRepositor enfant de Repository
+    # Repository est une Abstract Class donc est implementer par SQLA
     def __init__(self, model):
         self.model = model
 

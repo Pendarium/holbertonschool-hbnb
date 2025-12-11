@@ -4,6 +4,7 @@ from app.persistence.repository import SQLAlchemyRepository
 
 
 class UserRepository(SQLAlchemyRepository):
+    # SQLAlchemyRepository parent de UserRepository
     def __init__(self):
         super().__init__(User)
 
