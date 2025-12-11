@@ -1,32 +1,36 @@
 from flask_restx import Namespace, Resource, fields
-from flask_jwt_extended import create_access_token
-from flask_bcrypt import check_password_hash
 from app.services import facade
+from flask_jwt_extended import create_access_token
+# from app.extensions import bcrypt
 
-# Namespace pour l'authentification
-auth_ns = Namespace('auth', description='Authentication operations')
+api = Namespace('auth', description='User operations')
 
-# Model pour login
-login_model = auth_ns.model('Login', {
-    'email': fields.String(required=True, description='User email'),
-    'password': fields.String(required=True, description='User password')
+user_authentification = api.model('auth', {
+    'email': fields.String(
+        required=True, description='Email of the user'),
+    'password': fields.String(
+        required=True, description='Password of the user')
 })
 
 
-@auth_ns.route('/login')
-class Login(Resource):
-    @auth_ns.expect(login_model, validate=True)
+@api.route('/login')
+class Userlogin(Resource):
+    @api.expect(user_authentification)
+    @api.response(401, "Invalid credentials")
+    @api.response(200, "token")
     def post(self):
-        """Authenticate user and return JWT"""
-        credentials = auth_ns.payload
-        user = facade.get_user_by_email(credentials['email'])
+        user_data = api.payload
+        user_data_email = user_data['email']
+        existing_user = facade.get_user_by_email(user_data_email)
+        if not existing_user:
+            return {"error": "Invalid credentials"}, 401
+        if existing_user.verify_password(user_data['password']):
+            access_token = create_access_token(
+                identity=str(existing_user.id),
+                additional_claims={"is_admin": existing_user.is_admin}
+                # extra info here
+            )
 
-        if not user or not check_password_hash(user.password,
-                                               credentials['password']):
-            return {'error': 'Invalid credentials'}, 401
-        # is_admin true/false selon ton modèle
-        access_token = create_access_token(
-            identity=str(user.id),
-            additional_claims={"is_admin": user.is_admin}
-        )
-        return {'access_token': access_token}, 200
+            return {'access_token': access_token}, 200
+        else:
+            return {"error": "Invalid credentials"}, 401
