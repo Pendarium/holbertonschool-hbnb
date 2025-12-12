@@ -7,58 +7,34 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="icon" type="image/png" href="images/icon.png">
 </head>
-
 <body>
-
-    <!-- HEADER -->
     <header>
         <a href="index.html">
-            <img src="/part 4/front/images/logo.png" class="logo" alt="Logo">
+            <img src="images/logo.png" class="logo" alt="Logo">
         </a>
         <nav>
             <a href="index.html" class="Acceuil-button">Accueil</a>
-            <a href="login.html" class="Acceuil-button">Login</a>
+            <a href="login.html" class="login-button" id="login-link">Login</a>
         </nav>
     </header>
 
-    <!-- MAIN CONTENT -->
     <main>
+        <section class="filter-section">
+            <label for="price-filter">Filter by price:</label>
+            <select id="price-filter">
+                <!-- Options seront ajoutées par script.js -->
+            </select>
+        </section>
+
         <section id="places-list">
-
-            <!-- Place Card 1 -->
-            <div class="place-card">
-                <h3>Beautiful Beach House</h3>
-                <p>Price per night: $150</p>
-                <a href="place.html" class="details-button">View Details</a>
-            </div>
-
-            <!-- Place Card 2 -->
-            <div class="place-card">
-                <h3>Mountain Cabin</h3>
-                <p>Price per night: $120</p>
-                <a href="place.html" class="details-button">View Details</a>
-            </div>
-
-            <!-- Place Card 3 -->
-            <div class="place-card">
-                <h3>City Apartment</h3>
-                <p>Price per night: $100</p>
-                <a href="place.html" class="details-button">View Details</a>
-            </div>
-
-            <!-- Place Card 4 -->
-            <div class="place-card">
-                <h3>Lake House Retreat</h3>
-                <p>Price per night: $180</p>
-                <a href="place.html" class="details-button">View Details</a>
-            </div>
-
+            <!-- Les cards seront générées dynamiquement par script.js -->
         </section>
     </main>
 
-    <!-- FOOTER -->
     <footer>
         <p>All rights reserved.</p>
     </footer>
+
+    <script src="script.js"></script>
 </body>
 </html>

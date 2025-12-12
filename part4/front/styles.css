@@ -1,9 +1,17 @@
-/* ---------------------- BASE ---------------------- */
+/* ---------------------- FONT ---------------------- */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Roboto', sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f8f8f8;
+    background-color: #E7E7E7; /* gris clair */
+    color: #333;
+}
+
+h1, h2, h3 {
+    margin: 0 0 10px 0;
+    font-weight: 700;
 }
 
 /* ---------------------- HEADER ---------------------- */
@@ -11,9 +19,9 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 20px;
-    background-color: #ffffff;
-    border-bottom: 1px solid #ddd;
+    padding: 15px 30px;
+    background-color: #485696; /* bleu foncé */
+    color: #fff;
 }
 
 header .logo {
@@ -21,109 +29,153 @@ header .logo {
 }
 
 header nav a {
-    margin-left: 15px;
+    margin-left: 20px;
     text-decoration: none;
-    color: #333;
-    font-weight: bold;
+    color: #fff;
+    font-weight: 500;
+    transition: color 0.2s;
 }
 
 header nav a:hover {
-    color: #007BFF;
+    color: #F9C784; /* jaune clair */
+}
+
+/* ---------------------- BUTTONS ---------------------- */
+button, .details-button {
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    font-weight: 500;
+}
+
+button:hover, .details-button:hover {
+    opacity: 0.9;
+}
+
+/* ---------------------- PLACE LIST (GRID) ---------------------- */
+#places-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+    padding: 20px;
 }
 
 /* ---------------------- PLACE CARD ---------------------- */
 .place-card {
-    margin: 20px;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    background-color: #ffffff;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-    max-width: 300px;
+    padding: 15px;
+    border-radius: 12px;
+    background-color: #fff;
+    border: 1px solid #E7E7E7;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.place-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.1);
 }
 
 .place-card h3 {
     margin-top: 0;
-    font-size: 1.2em;
+    font-size: 1.3em;
+    color: #485696;
+}
+
+.place-card .price {
+    font-weight: bold;
+    color: #FC7A1E; /* orange */
 }
 
 .details-button {
     display: inline-block;
     margin-top: 10px;
-    padding: 8px 12px;
-    background-color: #007BFF;
+    padding: 8px 14px;
+    background-color: #485696; /* bleu foncé */
     color: #fff;
     text-decoration: none;
-    border-radius: 5px;
-    font-weight: bold;
+    border-radius: 6px;
+    font-weight: 500;
 }
 
 .details-button:hover {
-    background-color: #0056b3;
+    background-color: #FC7A1E; /* orange */
 }
 
 /* ---------------------- REVIEW CARD ---------------------- */
-.review-card {
-    margin: 20px;
-    padding: 10px;
-    border: 1px solid #ddd;
+.review-item {
+    margin: 10px 0;
+    padding: 12px;
     border-radius: 10px;
-    background-color: #ffffff;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    background-color: #fff;
+    border: 1px solid #E7E7E7;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
 
 /* ---------------------- PLACE DETAILS ---------------------- */
 .place-details {
     margin: 20px;
-    padding: 15px;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 12px;
+    background-color: #fff;
+    border: 1px solid #E7E7E7;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
 }
 
 .place-info {
-    margin: 5px 0;
+    margin: 8px 0;
+    color: #485696;
+    font-weight: 500;
 }
 
-/* ---------------------- ADD REVIEW FORM ---------------------- */
-.add-review,
-#review-form {
+/* ---------------------- FORMS ---------------------- */
+form, .add-review, #review-form {
     margin: 20px;
-    padding: 15px;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 12px;
+    background-color: #fff;
+    border: 1px solid #E7E7E7;
+    box-shadow: 0 3px 7px rgba(0,0,0,0.05);
 }
 
-#review-form textarea {
+form label {
+    display: block;
+    margin-top: 12px;
+    margin-bottom: 6px;
+    font-weight: 500;
+    color: #485696;
+}
+
+form input[type="email"],
+form input[type="password"],
+form textarea,
+form select {
     width: 100%;
-    height: 80px;
-    padding: 8px;
-    margin-top: 5px;
-    margin-bottom: 10px;
-    border-radius: 5px;
+    padding: 10px;
+    border-radius: 6px;
     border: 1px solid #ccc;
-    resize: vertical;
+    box-sizing: border-box;
 }
 
-#review-form button {
-    padding: 8px 12px;
-    background-color: #28a745;
-    color: #fff;
+form button {
+    margin-top: 15px;
+    padding: 10px 16px;
+    background-color: #F9C784; /* jaune clair */
+    color: #485696; /* bleu foncé */
     border: none;
-    border-radius: 5px;
-    font-weight: bold;
+    border-radius: 6px;
+    font-weight: 500;
 }
 
-#review-form button:hover {
-    background-color: #218838;
+form button:hover {
+    background-color: #FC7A1E; /* orange */
+    color: #fff;
 }
 
 /* ---------------------- FOOTER ---------------------- */
 footer {
     text-align: center;
-    padding: 20px;
-    background-color: #ffffff;
+    padding: 25px;
+    background-color: #485696; /* bleu foncé */
+    color: #fff;
     border-top: 1px solid #ddd;
     margin-top: 40px;
 }
@@ -137,7 +189,13 @@ footer {
 
     header nav a {
         margin-left: 0;
-        margin-top: 5px;
+        margin-top: 8px;
+    }
+
+    #places-list {
+        grid-template-columns: 1fr;
+        padding: 10px;
+        gap: 15px;
     }
 
     .place-card {
