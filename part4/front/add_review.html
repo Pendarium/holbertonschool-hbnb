@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Review</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/png" href="images/icon.png">
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header>
+        <a href="index.html">
+            <img src="/part 4/front/images/logo.png" class="logo" alt="Logo">
+        </a>
+        <nav>
+            <a href="index.html" class="Acceuil-button">Accueil</a>
+            <a href="login.html" class="Acceuil-button">Login</a>
+        </nav>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main>
+        <!-- Identification du lieu -->
+        <section class="place-details">
+            <h2>Review: Beautiful Beach House</h2>
+        </section>
+
+        <!-- Formulaire Add Review -->
+        <section class="add-review">
+            <form id="review-form">
+                <h2>Add a Review</h2>
+
+                <label for="review">Your Review:</label>
+                <textarea id="review" name="review" required></textarea>
+
+                <label for="rating">Rating:</label>
+                <select id="rating" name="rating" required>
+                    <option value="" disabled selected>Select rating</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+
+                <button type="submit">Submit Review</button>
+            </form>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>All rights reserved.</p>
+    </footer>
+
+    <script src="scripts.js"></script>
+</body>
+</html>

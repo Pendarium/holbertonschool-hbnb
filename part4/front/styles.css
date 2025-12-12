@@ -1,0 +1,146 @@
+/* ---------------------- BASE ---------------------- */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f8f8;
+}
+
+/* ---------------------- HEADER ---------------------- */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #ffffff;
+    border-bottom: 1px solid #ddd;
+}
+
+header .logo {
+    height: 50px;
+}
+
+header nav a {
+    margin-left: 15px;
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+}
+
+header nav a:hover {
+    color: #007BFF;
+}
+
+/* ---------------------- PLACE CARD ---------------------- */
+.place-card {
+    margin: 20px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    max-width: 300px;
+}
+
+.place-card h3 {
+    margin-top: 0;
+    font-size: 1.2em;
+}
+
+.details-button {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 8px 12px;
+    background-color: #007BFF;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.details-button:hover {
+    background-color: #0056b3;
+}
+
+/* ---------------------- REVIEW CARD ---------------------- */
+.review-card {
+    margin: 20px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: #ffffff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+/* ---------------------- PLACE DETAILS ---------------------- */
+.place-details {
+    margin: 20px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: #ffffff;
+}
+
+.place-info {
+    margin: 5px 0;
+}
+
+/* ---------------------- ADD REVIEW FORM ---------------------- */
+.add-review,
+#review-form {
+    margin: 20px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: #ffffff;
+}
+
+#review-form textarea {
+    width: 100%;
+    height: 80px;
+    padding: 8px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    resize: vertical;
+}
+
+#review-form button {
+    padding: 8px 12px;
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+#review-form button:hover {
+    background-color: #218838;
+}
+
+/* ---------------------- FOOTER ---------------------- */
+footer {
+    text-align: center;
+    padding: 20px;
+    background-color: #ffffff;
+    border-top: 1px solid #ddd;
+    margin-top: 40px;
+}
+
+/* ---------------------- RESPONSIVE ---------------------- */
+@media (max-width: 768px) {
+    header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    header nav a {
+        margin-left: 0;
+        margin-top: 5px;
+    }
+
+    .place-card {
+        max-width: 100%;
+    }
+}
