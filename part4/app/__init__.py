@@ -9,16 +9,16 @@ from app.extensions import bcrypt, jwt, db
 from flask_cors import CORS
 from app.database import init_db, seed_db
 
-
 def create_app(config_class="config.DevelopmentConfig"):
     app = Flask(__name__)
     app.config.from_object(config_class)
 
-    # Activer CORS uniquement pour le front local
-    CORS(app, resources={r"/api/*": {"origins": "http://localhost:5500"}})
+    # Activer CORS pour le frontend local uniquement et supporter les headers Authorization
+    CORS(app)
 
     api = Api(
-        app, version='1.0', title='HBnB API', description='HBnB Application API')
+        app, version='1.0', title='HBnB API', description='HBnB Application API'
+    )
 
     bcrypt.init_app(app=app)
     jwt.init_app(app)

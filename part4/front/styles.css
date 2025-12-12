@@ -1,18 +1,25 @@
 /* ---------------------- FONT ---------------------- */
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
 
-body {
+
+html, body {
     font-family: 'Roboto', sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #E7E7E7; /* gris clair */
+    background-color: #E7E7E7;
     color: #333;
 }
 
-h1, h2, h3 {
-    margin: 0 0 10px 0;
-    font-weight: 700;
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
+
+main {
+    flex: 1; /* prend tout l’espace disponible */
+}
+
 
 /* ---------------------- HEADER ---------------------- */
 header {
@@ -20,7 +27,7 @@ header {
     justify-content: space-between;
     align-items: center;
     padding: 15px 30px;
-    background-color: #485696; /* bleu foncé */
+    background-color: #485696;
     color: #fff;
 }
 
@@ -28,16 +35,40 @@ header .logo {
     height: 50px;
 }
 
+header nav {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+/* Liens standards du header */
 header nav a {
-    margin-left: 20px;
     text-decoration: none;
-    color: #fff;
     font-weight: 500;
     transition: color 0.2s;
+    color: #fff; /* couleur par défaut des liens */
 }
 
 header nav a:hover {
-    color: #F9C784; /* jaune clair */
+    color: #F9C784;
+}
+
+/* ---------------------- BOUTON LOGIN ---------------------- */
+/* Priorité pour s'assurer qu'il reste visible */
+header nav a.login-button {
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: #F9C784;
+    color: #485696 !important; /* force le contraste */
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s ease-in-out;
+}
+
+header nav a.login-button:hover {
+    background-color: #FC7A1E;
+    color: #fff;
 }
 
 /* ---------------------- BUTTONS ---------------------- */
@@ -82,14 +113,14 @@ button:hover, .details-button:hover {
 
 .place-card .price {
     font-weight: bold;
-    color: #FC7A1E; /* orange */
+    color: #FC7A1E;
 }
 
 .details-button {
     display: inline-block;
     margin-top: 10px;
     padding: 8px 14px;
-    background-color: #485696; /* bleu foncé */
+    background-color: #485696;
     color: #fff;
     text-decoration: none;
     border-radius: 6px;
@@ -97,7 +128,7 @@ button:hover, .details-button:hover {
 }
 
 .details-button:hover {
-    background-color: #FC7A1E; /* orange */
+    background-color: #FC7A1E;
 }
 
 /* ---------------------- REVIEW CARD ---------------------- */
@@ -110,9 +141,32 @@ button:hover, .details-button:hover {
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
 
+#add-review {
+    max-width: 900px;          /* largeur contrôlée */
+    margin: 40px auto !important;   /* centre + espace autour */
+    padding: 25px;
+    background-color: #fff;
+    border-radius: 12px;
+    border: 1px solid #E7E7E7;
+    box-shadow: 0 3px 7px rgba(0,0,0,0.05);
+}
+
+#reviews {
+    max-width: 900px;          /* limite la largeur */
+    margin: 40px auto;         /* centre + espace autour */
+    padding: 20px;             /* évite que le contenu touche les bords */
+    background-color: #fff;    
+    border-radius: 12px;
+    border: 1px solid #E7E7E7;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+}
+
+
+
 /* ---------------------- PLACE DETAILS ---------------------- */
 .place-details {
-    margin: 20px;
+    max-width: 900px;
+    margin: 40px auto;
     padding: 20px;
     border-radius: 12px;
     background-color: #fff;
@@ -158,15 +212,15 @@ form select {
 form button {
     margin-top: 15px;
     padding: 10px 16px;
-    background-color: #F9C784; /* jaune clair */
-    color: #485696; /* bleu foncé */
+    background-color: #F9C784;
+    color: #485696;
     border: none;
     border-radius: 6px;
     font-weight: 500;
 }
 
 form button:hover {
-    background-color: #FC7A1E; /* orange */
+    background-color: #FC7A1E;
     color: #fff;
 }
 
@@ -174,7 +228,7 @@ form button:hover {
 footer {
     text-align: center;
     padding: 25px;
-    background-color: #485696; /* bleu foncé */
+    background-color: #485696;
     color: #fff;
     border-top: 1px solid #ddd;
     margin-top: 40px;
@@ -185,11 +239,18 @@ footer {
     header {
         flex-direction: column;
         align-items: flex-start;
+        padding: 15px;
+    }
+
+    header nav {
+        flex-direction: column;
+        width: 100%;
+        gap: 10px;
+        margin-top: 10px;
     }
 
     header nav a {
         margin-left: 0;
-        margin-top: 8px;
     }
 
     #places-list {

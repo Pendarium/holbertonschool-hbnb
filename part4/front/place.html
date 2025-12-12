@@ -19,23 +19,26 @@
     </header>
 
     <main>
-        <!-- ID ajouté ici -->
+        <!-- Section des détails du lieu -->
         <section id="place-details" class="place-details">
             <!-- Les détails seront générés dynamiquement par script.js -->
         </section>
 
+        <!-- Section des reviews existantes -->
         <section id="reviews">
             <!-- Les reviews seront générées dynamiquement par script.js -->
         </section>
 
+        <!-- Formulaire pour ajouter une review -->
         <section id="add-review">
             <form id="review-form">
                 <h2>Add a Review</h2>
+
                 <label for="review-text">Review:</label>
                 <textarea id="review-text" name="review-text" required></textarea>
 
-                <label for="rating">Rating:</label>
-                <select id="rating" name="rating" required>
+                <label for="review-rating">Rating:</label>
+                <select id="review-rating" name="review-rating" required>
                     <option value="" disabled selected>Select rating</option>
                     <option value="1">1</option>
                     <option value="2">2</option>
